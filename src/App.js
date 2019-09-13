@@ -1,20 +1,17 @@
 import React from 'react';
-import { Header } from './header';
-import { Footer } from './footer';
-import { MainContent } from './main-content';
+import Todo from "./Component"
 import './App.css';
 
 function App() {
+  const goods = [
+    {id:1, complited:false,title:"Buy milk"},
+    {id:2, complited:false,title:"Buy cookies"},
+    {id:3, complited:false,title:"Buy bred"},
+    {id:4, complited:false,title:"Buy meet"}
+  ]
   return (
-    <div className="App">
-      {/* <Header
-        name='Sam'
-        email='sam@gmail.com' /> */}
-      <MainContent alt='alternative text' title='beautiful image' />
-      <Footer
-        name='Sam'
-        email='sam@gmail.com' />
-    </div>
+    
+      <Todo goods ={goods} />
   );
 }
 
