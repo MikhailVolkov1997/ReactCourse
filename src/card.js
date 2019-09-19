@@ -1,95 +1,83 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Base } from './base-class';
+import React from "react" 
+import "./Card.css"
 
-export class Card extends Base {
-    constructor(props) {
-        super(props);
-        this.props = props;
-        this.defaultTitle = 'No title';
-        this.currencySign = '$';
-        this.defaultPrice = '0';
-        this.price = this.getPrice();
-        this.onClickHandler = this.onClickHandler.bind(this);
-        this.handleClickAddToCart = this.handleClickAddToCart.bind(this);
-        this.remove = this.remove.bind(this);
+export default class Card extends React.Component {
+   constructor(props) {
+       super(props);
+       this.state = {
+        isActive: false,
     }
+        this.title = "";
+        this.price = this.getPrice()
+        this.currencySign = "$";
+        this.defaultPrice = 0;
+        this.defaultTitle = "No title"
+        this.basket = [];
+        
+   }
 
-    getTitle() {
-        return (this.props && this.props.item.title) || this.defaultTitle;
+  getPrice = (price) => {
+     return this.props.price || this.defaultPrice
+     
+   }
+    getTitle () {
+        return !this.props.title ? this.defaultTitle : this.props.title 
     }
-
-    getPrice() {
-        return this.currencySign + (this.props.item.price || this.defaultPrice);
-    }
-
+   
     setPrice(price) {
-        this.price = this.currencySign + price;
+       return this.price = price  ;
     }
 
-    getClassName () {
-        return this.state && this.state.isActive
-            ? 'card active'
-            : 'card';
-    }
-
-    onClickHandler(event) {
-        this.setState({
-            isActive: !this.state ? true : !this.state.isActive,
+    handleClick = () => {
+        
+         this.setState({
+            isActive: !this.state ? true : !this.state.isActive
         });
-        const price = Math.round((Math.random() * 100)).toFixed(2);
+        let price = +Math.round((Math.random()*100)).toFixed(2);
         this.setPrice(price);
-        this.props.fn({
-            id: this.props.item.id,
-            price
-        });
+
+    }
+    getClassName() {
+        return this.state && this.state.isActive 
+          ? "card-active"
+          : "card"
+    }
+    
+
+    getKey(product) {
+        return product.title
     }
 
-    handleClickAddToCart(event) {
-        event.stopPropagation();
-        this.props.addToCart({
-            title: this.props.item.title,
-            price: this.price.slice(1)
-        });
-    }
-
-    remove(event) {
-        event.stopPropagation();
-
-        this.props.removeCard(this.props.k);
+    addToBasket = (e) => {
+     
+        e.stopPropagation();
+        
+             this.basket.push({
+                    key:this.props.id,
+                    title:this.props.title,
+                    price:this.price,
+                    discont:this.props.discont
+                })
     }
 
     componentWillUnmount() {
-        console.log('componentWillUnmount...');
+        if (this.basket.length !== 0) {
+         let stringProducts = JSON.stringify(this.basket);
+         localStorage.setItem('basket', stringProducts)
+        }
     }
+   render () {
 
-    stopPropagation(event) {
-        event.stopPropagation();
-    }
-
-    render() {
-        return(
-            <div className={ this.getClassName() }
-                 onClick={this.onClickHandler}>
-                <h5>
-                    {this.getTitle()}
-                </h5>
-                <h6>
-                    {this.price}
-                </h6>
-                <button onClick={this.handleClickAddToCart}>buy</button>
-                <button onClick={this.remove}>remove</button>
-                <Link to={{
-                    pathname: `/product/${this.props.item.id}`,
-                    state: {
-                        price: this.price,
-                        title: this.getTitle()
-                    }
-                }}
-                      onClick={this.stopPropagation }>
-                    show details
-                </Link>
+       return  <div className={this.getClassName()}>
+           
+       <div  onClick={this.handleClick}>
+                <div className="title"> {this.getTitle()}</div>
+                <div className="price"> price: {this.getPrice() }</div>
+                <div className="discont"> discont:{this.props.discont}</div>
+                <button className="button" onClick={this.addToBasket}>buy</button>
             </div>
-        );
-    }
+            </div>
+           
+       
+   }
 }

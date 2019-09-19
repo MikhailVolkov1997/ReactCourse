@@ -1,18 +1,23 @@
 import React from 'react';
-import Todo from "./Component"
-import './App.css';
+import Product from './product';
+import Basket from './basket';
+import {BrowserRouter, Route} from "react-router-dom"
+import Home from './Home';
+import AddProduct from './addProduct';
+
+
+
 
 function App() {
-  const goods = [
-    {id:1, complited:false,title:"Buy milk"},
-    {id:2, complited:false,title:"Buy cookies"},
-    {id:3, complited:false,title:"Buy bred"},
-    {id:4, complited:false,title:"Buy meet"}
-  ]
   return (
-    
-      <Todo goods ={goods} />
-  );
+  <BrowserRouter>
+      <Route path='/' component={Home} />
+      <Route path='/product'  component={Product}  />
+      <Route path='/basket'  component={Basket}  />
+      <Route path='/addproduct' component={AddProduct}/>
+
+  </BrowserRouter>
+  )
 }
 
 export default  App;
